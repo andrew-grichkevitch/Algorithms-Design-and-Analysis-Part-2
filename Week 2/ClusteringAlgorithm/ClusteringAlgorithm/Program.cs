@@ -222,14 +222,21 @@ namespace ClusteringAlgorithm
         private static BitVector32 GetLeader(Dictionary<BitVector32, BitVector32> hashtable, BitVector32 vector, out int depth)
         {
             depth = 0;
+            var leader = hashtable[vector];
+
+            while (!leader.Equals(hashtable[leader]))
+            {
+                depth++;
+                leader = hashtable[leader];
+            }
 
             while (!vector.Equals(hashtable[vector]))
             {
                 vector = hashtable[vector];
-                depth++;
+                hashtable[vector] = leader;
             }
 
-            return vector;
+            return leader;
         }
     }
 }
